@@ -1,6 +1,9 @@
 const router = require("express").Router();
 const comment = require("../controller/comment");
 
+//특정 피드 댓글 조회
+router.get("/", comment.findAllComment);
+
 //댓글 작성
 router.get("/", comment.createComment);
 

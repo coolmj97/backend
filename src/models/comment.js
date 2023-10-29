@@ -17,6 +17,7 @@ module.exports = (mongoose) => {
           introduction: { type: String, default: "" },
         },
         content: { type: String, required: true },
+        feedId: { type: String, required: true },
       },
       { timestamps: true }
     )
