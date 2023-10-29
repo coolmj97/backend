@@ -1,8 +1,21 @@
 const db = require("../models");
 const Comment = db.comment;
+const User = db.user;
 
-const createComment = (req, res) => {
-  // Validate request
+const findAllComment = async (req, res) => {
+  try {
+    const comments = await Comment.find();
+    res.send(comments);
+  } catch (err) {
+    res.status(500).send({
+      message: err.message,
+    });
+  }
+};
+
+const createComment = async (req, res) => {
+  const { userId, content, feedId } = req.body;
+
   if (!req.body.title) {
     res.status(400).send({
       message: "Title is empty!",
@@ -11,86 +24,84 @@ const createComment = (req, res) => {
     return;
   }
 
-  // Set document
-  const comment = new Comment({
-    content: req.body.content,
-    completed: req.body.completed || false,
-  });
-
-  // Save document
-  comment
-    .save()
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Create document failure.",
-      });
+  try {
+    const matchedUser = await User.find((data) => data.id === userId);
+    const comment = new Comment({
+      user: matchedUser,
+      content,
+      feedId,
     });
+
+    const data = comment.save();
+
+    res.send(data);
+  } catch (err) {
+    res.status(500).send({
+      message: err.message,
+    });
+  }
 };
 
-const updateComment = (req, res) => {
+const updateComment = async (req, res) => {
   if (!req.body) {
     return res.status(400).send({
       message: "Data is empty!",
     });
   }
 
-  // Set id
-  const id = req.params.id;
+  const { id } = res.params;
 
-  // Update document by id
-  Comment.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
-    .then((data) => {
-      if (!data) {
-        res.status(404).send({
-          message: "Cannot update document. (id: " + id + ")",
-        });
-      } else {
-        res.send({
-          message: "Document updated.",
-        });
-      }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Update document failure. (id: " + id + ")",
-      });
+  try {
+    const data = await Comment.findByIdAndUpdate(id, req.body, {
+      useFindAndModify: false,
     });
+
+    if (!data) {
+      res.status(404).send();
+      return;
+    }
+
+    res.send({
+      message: "Document updated.",
+    });
+  } catch {
+    res.status(500).send({
+      message: err.message,
+    });
+  }
 };
 
-const deleteComment = (req, res) => {
+const deleteComment = async (req, res) => {
   if (!req.body) {
     return res.status(400).send({
       message: "Data is empty!",
     });
   }
 
-  // Set id
-  const id = req.params.id;
+  const { id } = res.params;
 
-  // Delete document by id
-  Comment.findByIdAndRemove(id)
-    .then((data) => {
-      if (!data) {
-        res.status(404).send({
-          message: "Cannot delete document. (id: " + id + ")",
-        });
-      } else {
-        res.send({
-          message: "Document deleted.",
-        });
-      }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Delete document failure. (id: " + id + ")",
+  try {
+    const data = await Comment.findByIdAndRemove(id);
+
+    if (!data) {
+      res.status(404).send({
+        message: "Cannot delete document. (id: " + id + ")",
       });
+      return;
+    }
+
+    res.send({
+      message: "Document deleted.",
     });
+  } catch {
+    res.status(500).send({
+      message: err.message || "Delete document failure. (id: " + id + ")",
+    });
+  }
 };
 
 module.exports = {
+  findAllComment,
   createComment,
   updateComment,
   deleteComment,

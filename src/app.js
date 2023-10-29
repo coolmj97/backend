@@ -18,8 +18,8 @@ const feedRouter = require("./routes/feed");
 const commentRouter = require("./routes/comment");
 
 app.use("/users", userRouter);
-app.use("/feed", feedRouter);
-app.use("/comment", commentRouter);
+app.use("/feeds", feedRouter);
+app.use("/comments", commentRouter);
 
 // DB Connection
 mongoose
