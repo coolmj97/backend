@@ -6,7 +6,7 @@ module.exports = (mongoose) => {
         photos: { type: [String], required: true },
         content: { type: String, required: true },
         thumbnailUrl: { type: String, default: null },
-        isLiked: { type: Boolean, default: false },
+        likesCount: { type: Number, default: 0 },
       },
       { timestamps: true }
     )
