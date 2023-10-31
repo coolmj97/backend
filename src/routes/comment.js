@@ -5,7 +5,7 @@ const comment = require("../controller/comment");
 router.get("/", comment.findAllComment);
 
 //댓글 작성
-router.get("/", comment.createComment);
+router.post("/", comment.createComment);
 
 //댓글 수정
 router.patch("/:id", comment.updateComment);
