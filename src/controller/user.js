@@ -22,10 +22,8 @@ const createUser = async (req, res) => {
 
     const data = await user.save();
     res.send(data);
-  } catch (err) {
-    res.status(500).send({
-      message: err.message,
-    });
+  } catch {
+    res.status(500).send();
   }
 };
 
@@ -36,17 +34,12 @@ const findOneByUserId = async (req, res) => {
   try {
     const data = await User.findById(id);
     if (!data) {
-      res.status(404).send({
-        message: "Cannot find document. (id: " + id + ")",
-      });
+      res.status(404).send();
       return;
     }
     res.send(data);
-  } catch (err) {
-    res.status(500).send({
-      message:
-        err.message || "Retrieve single document failure. (id: " + id + ")",
-    });
+  } catch {
+    res.status(500).send();
   }
 };
 
@@ -54,30 +47,20 @@ const findOneByUserId = async (req, res) => {
 const updateUser = async (req, res) => {
   const { id } = req.params;
 
-  if (!req.body) {
-    return res.status(400).send({
-      message: "Data is empty!",
-    });
-  }
-
   try {
     const data = await User.findByIdAndUpdate(id, req.body, {
       useFindAndModify: false,
     });
     if (!data) {
-      res.status(404).send({
-        message: "Cannot update document. (id: " + id + ")",
-      });
+      res.status(404).send();
       return;
     }
 
     res.send({
-      message: "Document updated.",
+      message: "Success.",
     });
-  } catch (err) {
-    res.status(500).send({
-      message: err.message || "Update document failure. (id: " + id + ")",
-    });
+  } catch {
+    res.status(500).send();
   }
 };
 
@@ -85,29 +68,19 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   const { id } = req.params;
 
-  if (!req.body) {
-    return res.status(400).send({
-      message: "Data is empty!",
-    });
-  }
-
   try {
     const data = await User.findByIdAndRemove(id);
 
     if (!data) {
-      res.status(404).send({
-        message: "Cannot delete document. (id: " + id + ")",
-      });
+      res.status(404).send();
       return;
     }
 
     res.send({
-      message: "Document deleted.",
+      message: "Success.",
     });
-  } catch (err) {
-    res.status(500).send({
-      message: err.message,
-    });
+  } catch {
+    res.status(500).send();
   }
 };
 

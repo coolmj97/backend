@@ -19,10 +19,8 @@ const createFeed = async (req, res) => {
 
     const data = await feed.save();
     res.send(data);
-  } catch (err) {
-    res.status(500).send({
-      message: err.message || "Create document failure.",
-    });
+  } catch {
+    res.status(500).send();
   }
 };
 
@@ -30,10 +28,8 @@ const findAllFeed = async (req, res) => {
   try {
     const data = await Feed.find();
     res.send(data);
-  } catch (err) {
-    res.status(500).send({
-      message: err.message || "Retrieve document failure.",
-    });
+  } catch {
+    res.status(500).send();
   }
 };
 
@@ -45,75 +41,52 @@ const findOneByFeedId = async (req, res) => {
     const data = await Feed.findById(id);
 
     if (!data) {
-      res.status(404).send({
-        message: `not found ${id}}`,
-      });
+      res.status(404).send();
       return;
     }
 
     res.send(data);
-  } catch (err) {
-    res.status(500).send({
-      message: err.message,
-    });
+  } catch {
+    res.status(500).send();
   }
 };
 
 // Update document by id
 const updateFeed = async (req, res) => {
-  if (!req.body) {
-    return res.status(400).send({
-      message: "Data is empty!",
-    });
-  }
-
   try {
     const data = await Feed.findByIdAndUpdate(id, req.body, {
       useFindAndModify: false,
     });
+
     if (!data) {
-      res.status(404).send({
-        message: "Cannot update document. (id: " + id + ")",
-      });
+      res.status(404).send();
       return;
     }
 
     res.send({
-      message: "Document updated.",
+      message: "Success.",
     });
-  } catch (err) {
-    res.status(500).send({
-      message: err.message,
-    });
+  } catch {
+    res.status(500).send();
   }
 };
 
 const updateLikes = async (req, res) => {
   const { isLiked } = req.body;
+  const { id } = req.params;
+
+  const feed = await Feed.findById(id);
 
   try {
-    const likes = new Feed({
-      ...req.body,
-      isLiked,
+    await Feed.findByIdAndUpdate(id, {
+      likesCount: isLiked ? feed.likesCount + 1 : feed.likesCount - 1,
     });
-
-    const data = await Feed.findByIdAndUpdate(id, likes, {
-      useFindAndModify: false,
-    });
-    if (!data) {
-      res.status(404).send({
-        message: "Cannot update document. (id: " + id + ")",
-      });
-      return;
-    }
 
     res.send({
-      message: "Document updated.",
+      message: "Success.",
     });
-  } catch (err) {
-    res.status(500).send({
-      message: err.message || "Update document failure. (id: " + id + ")",
-    });
+  } catch {
+    res.status(500).send();
   }
 };
 
@@ -121,29 +94,19 @@ const updateLikes = async (req, res) => {
 const deleteFeed = async (req, res) => {
   const { id } = req.params;
 
-  if (!req.body) {
-    return res.status(400).send({
-      message: "Data is empty!",
-    });
-  }
-
   try {
     const data = await Feed.findByIdAndRemove(id);
 
     if (!data) {
-      res.status(404).send({
-        message: "Cannot delete document. (id: " + id + ")",
-      });
+      res.status(404).send();
       return;
     }
 
     res.send({
-      message: "Document deleted.",
+      message: "Success.",
     });
-  } catch (err) {
-    res.status(500).send({
-      message: err.message,
-    });
+  } catch {
+    res.status(500).send();
   }
 };
 
