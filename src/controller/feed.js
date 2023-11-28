@@ -1,23 +1,27 @@
-const db = require("../models");
+const db = require('../models');
 const Feed = db.feed;
+const admin = require('firebase-admin');
 
 const createFeed = async (req, res) => {
-  const { photos, content } = req.body;
+  const { title, photos, content, user } = req.body;
 
   if (!content) {
     res.status(400).send({
-      message: "내용을 입력해주세요.",
+      message: '내용을 입력해주세요.',
     });
     return;
   }
 
   try {
     const feed = new Feed({
+      user,
+      title,
       photos,
       content,
     });
 
     const data = await feed.save();
+
     res.send(data);
   } catch {
     res.status(500).send();
@@ -26,7 +30,10 @@ const createFeed = async (req, res) => {
 
 const findAllFeed = async (req, res) => {
   try {
-    const data = await Feed.find();
+    const idToken = req.headers.authorization.replace('Bearer ', '');
+    const user = await admin.auth().verifyIdToken(idToken);
+    const data = await Feed.find({ uid: user.uid });
+
     res.send(data);
   } catch {
     res.status(500).send();
@@ -64,7 +71,7 @@ const updateFeed = async (req, res) => {
     }
 
     res.send({
-      message: "Success.",
+      message: 'Success.',
     });
   } catch {
     res.status(500).send();
@@ -83,7 +90,7 @@ const updateLikes = async (req, res) => {
     });
 
     res.send({
-      message: "Success.",
+      message: 'Success.',
     });
   } catch {
     res.status(500).send();
@@ -103,7 +110,7 @@ const deleteFeed = async (req, res) => {
     }
 
     res.send({
-      message: "Success.",
+      message: 'Success.',
     });
   } catch {
     res.status(500).send();

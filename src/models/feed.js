@@ -1,12 +1,13 @@
 module.exports = (mongoose) => {
   const Feed = mongoose.model(
-    "feed",
+    'feed',
     mongoose.Schema(
       {
-        photos: { type: [String], required: true },
+        user: { type: Object, required: true },
+        title: { type: String, required: true },
+        photos: { type: Object },
         content: { type: String, required: true },
-        thumbnailUrl: { type: String, default: null },
-        likesCount: { type: Number, default: 0 },
+        uid: { type: String, required: true },
       },
       { timestamps: true }
     )
