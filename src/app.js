@@ -24,9 +24,9 @@ app.use(bodyParser.json()); // JSON 파싱 설정
 app.use(bodyParser.urlencoded({ extended: true })); // URL-encoded 데이터 파싱 설정
 
 // RESTful API route for DB
-const userRouter = require('./routes/user');
+// const userRouter = require('./routes/user');
 const feedRouter = require('./routes/feed');
-const commentRouter = require('./routes/comment');
+// const commentRouter = require('./routes/comment');
 const s3Router = require('./routes/s3');
 
 app.use('/users', userRouter);
