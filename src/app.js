@@ -29,9 +29,9 @@ const feedRouter = require('./routes/feed');
 // const commentRouter = require('./routes/comment');
 const s3Router = require('./routes/s3');
 
-app.use('/users', userRouter);
+// app.use('/users', userRouter);
 app.use('/feeds', feedRouter);
-app.use('/comments', commentRouter);
+// app.use('/comments', commentRouter);
 app.use('/upload', s3Router);
 
 // DB Connection
