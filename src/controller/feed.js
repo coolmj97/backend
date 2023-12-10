@@ -2,12 +2,13 @@ const db = require('../models');
 const Feed = db.feed;
 const admin = require('firebase-admin');
 
+//작성
 const createFeed = async (req, res) => {
-  const { title, photos, content, user } = req.body;
+  const { title, photos, content, user, uid } = req.body;
 
-  if (!content) {
+  if (!title) {
     res.status(400).send({
-      message: '내용을 입력해주세요.',
+      message: '제목을 입력해주세요.',
     });
     return;
   }
@@ -15,6 +16,7 @@ const createFeed = async (req, res) => {
   try {
     const feed = new Feed({
       user,
+      uid,
       title,
       photos,
       content,
@@ -28,19 +30,24 @@ const createFeed = async (req, res) => {
   }
 };
 
+//목록
 const findAllFeed = async (req, res) => {
   try {
-    const idToken = req.headers.authorization.replace('Bearer ', '');
+    const idToken = req.headers.authorization?.replace('Bearer ', '');
     const user = await admin.auth().verifyIdToken(idToken);
     const data = await Feed.find({ uid: user.uid });
 
-    res.send(data);
-  } catch {
+    const offset = parseInt(req.query.offset, 10) || 0;
+    const result = data.slice(offset, offset + req.query.limit);
+
+    res.send(result || []);
+  } catch (e) {
+    console.log('error', e);
     res.status(500).send();
   }
 };
 
-// Retrieve single document
+//상세
 const findOneByFeedId = async (req, res) => {
   const { id } = req.params;
 
@@ -58,8 +65,10 @@ const findOneByFeedId = async (req, res) => {
   }
 };
 
-// Update document by id
+//수정
 const updateFeed = async (req, res) => {
+  const { id } = req.params;
+
   try {
     const data = await Feed.findByIdAndUpdate(id, req.body, {
       useFindAndModify: false,
@@ -97,7 +106,7 @@ const updateLikes = async (req, res) => {
   }
 };
 
-// Delete document by id
+//삭제
 const deleteFeed = async (req, res) => {
   const { id } = req.params;
 
