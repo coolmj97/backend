@@ -7,7 +7,8 @@ const admin = require('firebase-admin');
 
 const app = express();
 
-const { PORT, MONGO_URI, GOOGLE_APPLICATION_CREDENTIALS } = process.env;
+const { MONGO_URI, GOOGLE_APPLICATION_CREDENTIALS } = process.env;
+const PORT = process.env.PORT || 8080;
 
 const serviceAccount = require(GOOGLE_APPLICATION_CREDENTIALS);
 
@@ -48,6 +49,4 @@ app.get('/', (req, res) => {
 const hostname = '0.0.0.0';
 
 // Set listen port for request
-app.listen(PORT, hostname, () => {
-  console.log(`Server running at http://${hostname}:${PORT}/`);
-});
+app.listen(PORT, hostname);
