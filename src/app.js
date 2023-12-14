@@ -18,7 +18,9 @@ admin.initializeApp({
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors());
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'https://snapshot-front.vercel.app');
+});
 
 app.use(bodyParser.json()); // JSON 파싱 설정
 app.use(bodyParser.urlencoded({ extended: true })); // URL-encoded 데이터 파싱 설정
