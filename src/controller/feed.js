@@ -13,6 +13,13 @@ const createFeed = async (req, res) => {
     return;
   }
 
+  if (content === '<p><br></p>') {
+    res.status(400).send({
+      message: '내용을 입력해주세요.',
+    });
+    return;
+  }
+
   try {
     const feed = new Feed({
       user,
