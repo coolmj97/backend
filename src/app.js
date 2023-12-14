@@ -45,7 +45,9 @@ app.get('/', (req, res) => {
   res.json({ message: `Server is running on port ${PORT}` });
 });
 
+const hostname = '0.0.0.0';
+
 // Set listen port for request
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.listen(PORT, hostname, () => {
+  console.log(`Server running at http://${hostname}:${PORT}/`);
 });
