@@ -1,9 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-const cors = require('cors')({
-  origin: ['http://localhost:3001', 'https://snapshot-front.vercel.app'],
-  credentials: true,
-});
+const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const admin = require('firebase-admin');
@@ -23,7 +20,12 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use(cors());
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
 
 app.use(bodyParser.json()); // JSON 파싱 설정
 app.use(bodyParser.urlencoded({ extended: true })); // URL-encoded 데이터 파싱 설정
