@@ -51,3 +51,5 @@ const hostname = '0.0.0.0';
 
 // Set listen port for request
 app.listen(PORT, hostname);
+
+exports.api = functions.https.onRequest(app);
