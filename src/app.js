@@ -10,7 +10,10 @@ const app = express();
 const { MONGO_URI, GOOGLE_APPLICATION_CREDENTIALS } = process.env;
 const PORT = process.env.PORT || 8080;
 
-const serviceAccount = require(GOOGLE_APPLICATION_CREDENTIALS);
+const fs = require('fs');
+const serviceAccount = JSON.parse(fs.readFileSync(GOOGLE_APPLICATION_CREDENTIALS, 'utf8'));
+
+// const serviceAccount = require(GOOGLE_APPLICATION_CREDENTIALS);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
