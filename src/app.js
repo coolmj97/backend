@@ -7,10 +7,10 @@ const admin = require('firebase-admin');
 
 const app = express();
 
-const { MONGO_URI, FIREBASE_CONFIG } = process.env;
+const { MONGO_URI, GOOGLE_APPLICATION_CREDENTIALS } = process.env;
 const PORT = process.env.PORT || 8080;
 
-const serviceAccount = require(FIREBASE_CONFIG);
+const serviceAccount = require(GOOGLE_APPLICATION_CREDENTIALS);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
