@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors')({
-  origin: ['http://localhost:3001', 'snapshot-front.vercel.app'],
+  origin: ['http://localhost:3001', 'https://snapshot-front.vercel.app'],
   credentials: true,
 });
 const mongoose = require('mongoose');
