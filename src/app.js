@@ -7,10 +7,10 @@ const admin = require('firebase-admin');
 
 const app = express();
 
-const { MONGO_URI, GOOGLE_APPLICATION_CREDENTIALS } = process.env;
+const { MONGO_URI, FIREBASE_CONFIG } = process.env;
 const PORT = process.env.PORT || 8080;
 
-const serviceAccount = require(GOOGLE_APPLICATION_CREDENTIALS);
+const serviceAccount = require(FIREBASE_CONFIG);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -19,20 +19,6 @@ admin.initializeApp({
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
-const allowedOrigins = ['https://snapshot-front.vercel.app', 'http://localhost:3001'];
-
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-};
-
-// app.use(cors(corsOptions));
 app.use(cors());
 
 app.use(bodyParser.json()); // JSON 파싱 설정
