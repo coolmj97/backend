@@ -7,13 +7,16 @@ const admin = require('firebase-admin');
 
 const app = express();
 
-const { MONGO_URI, GOOGLE_APPLICATION_CREDENTIALS } = process.env;
+const { MONGO_URI, GOOGLE_APPLICATION_CREDENTIALS, FIREBASE_ADMIN_SDK_KEY } = process.env;
 const PORT = process.env.PORT || 8080;
 
-const fs = require('fs');
-const serviceAccount = JSON.parse(fs.readFileSync(GOOGLE_APPLICATION_CREDENTIALS, 'utf8'));
+let serviceAccount;
 
-// const serviceAccount = require(GOOGLE_APPLICATION_CREDENTIALS);
+if (process.env.NODE_ENV === 'production') {
+  serviceAccount = require(FIREBASE_ADMIN_SDK_KEY);
+} else {
+  serviceAccount = require(GOOGLE_APPLICATION_CREDENTIALS);
+}
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
