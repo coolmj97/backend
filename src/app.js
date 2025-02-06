@@ -10,7 +10,10 @@ const app = express();
 const { MONGO_URI, GOOGLE_APPLICATION_CREDENTIALS, FIREBASE_ADMIN_SDK_KEY } = process.env;
 const PORT = process.env.PORT || 8080;
 
-const serviceAccount = JSON.parse(FIREBASE_ADMIN_SDK_KEY);
+// const serviceAccount = JSON.parse(FIREBASE_ADMIN_SDK_KEY);
+const serviceAccount = JSON.parse(
+  Buffer.from(process.env.FIREBASE_ADMIN_SDK_KEY, 'base64').toString('utf8')
+);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
