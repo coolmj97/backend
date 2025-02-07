@@ -27,6 +27,9 @@ RUN npm ci
 # Copy application code
 COPY --link . .
 
+# Debugging: Check if app.js exists after copying
+RUN ls -al /app
+
 
 # Final stage for app image
 FROM base
@@ -34,6 +37,9 @@ FROM base
 # Copy built application
 COPY --from=build /app /app
 
+# Debugging: Check if app.js exists in final image
+RUN ls -al /app
+
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 8080
-CMD [ "npm", "run", "start" ]
+CMD ["npm", "run", "start"]
