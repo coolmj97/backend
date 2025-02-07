@@ -8,7 +8,7 @@ const admin = require('firebase-admin');
 const app = express();
 
 const { MONGO_URI } = process.env;
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 const serviceAccount = JSON.parse(
   Buffer.from(process.env.FIREBASE_ADMIN_SDK_KEY, 'base64').toString('utf8')
