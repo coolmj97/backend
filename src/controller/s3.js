@@ -1,4 +1,4 @@
-const AWS = require('aws-sdk');
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 
 const uploadImage = async (req, res) => {
   const file = req.file;
@@ -7,7 +7,7 @@ const uploadImage = async (req, res) => {
   const ACCESS_KEY = process.env.AWS_S3_ACCESS_KEY;
   const SECRET_ACCESS_KEY = process.env.AWS_S3_SECRET_ACCESS_KEY;
 
-  AWS.config.update({
+  const s3 = new S3Client({
     region: REGION,
     credentials: {
       accessKeyId: ACCESS_KEY,
@@ -15,18 +15,21 @@ const uploadImage = async (req, res) => {
     },
   });
 
-  const s3 = new AWS.S3();
-
   try {
+    const bucketName = 'kmj-test-bucket';
+    const objectKey = file.originalname;
+
+    const objUrl = `https://${bucketName}.s3.${REGION}.amazonaws.com/${objectKey}`;
+
     const uploadParams = {
-      Bucket: 'kmj-test-bucket',
-      Key: file.originalname, // 업로드된 객체의 키를 파일의 원래 이름으로 지정
-      Body: file.buffer, // 업로드할 파일의 데이터
+      Bucket: bucketName,
+      Key: objectKey,
+      Body: file.buffer,
     };
 
-    const data = await s3.upload(uploadParams).promise();
+    await s3.send(new PutObjectCommand(uploadParams));
 
-    res.send({ url: data.Location });
+    res.send({ url: objUrl });
   } catch (e) {
     res.status(500).send();
   }
