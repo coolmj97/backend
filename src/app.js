@@ -7,10 +7,9 @@ const admin = require('firebase-admin');
 
 const app = express();
 
-const { MONGO_URI, GOOGLE_APPLICATION_CREDENTIALS, FIREBASE_ADMIN_SDK_KEY } = process.env;
-const PORT = process.env.PORT || 8080;
+const { MONGO_URI } = process.env;
+const PORT = process.env.PORT || 3000;
 
-// const serviceAccount = JSON.parse(FIREBASE_ADMIN_SDK_KEY);
 const serviceAccount = JSON.parse(
   Buffer.from(process.env.FIREBASE_ADMIN_SDK_KEY, 'base64').toString('utf8')
 );
@@ -53,4 +52,6 @@ app.get('/', (req, res) => {
 const hostname = '0.0.0.0';
 
 // Set listen port for request
-app.listen(PORT, hostname);
+app.listen(PORT, hostname, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
