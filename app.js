@@ -29,9 +29,9 @@ app.use(bodyParser.urlencoded({ extended: true })); // URL-encoded 데이터 파
 
 // RESTful API route for DB
 // const userRouter = require('./routes/user');
-const feedRouter = require('./routes/feed');
+const feedRouter = require('./src/routes/feed');
 // const commentRouter = require('./routes/comment');
-const s3Router = require('./routes/s3');
+const s3Router = require('./src/routes/s3');
 
 // app.use('/users', userRouter);
 app.use('/feeds', feedRouter);
